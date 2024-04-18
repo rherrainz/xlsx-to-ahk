@@ -12,7 +12,10 @@ const excelData = xlsx.utils.sheet_to_json(worksheet, { raw: true });
 //Función para obtener la fecha actual y mostrarla en el formato correcto
 const getFechaDesde = () => {
   const date = new Date();
-  const day = date.getDate() + 1;
+  let day = date.getDate() + 1;
+  if (day < 10) {
+    day = `0${day}`;
+  }
   let month = date.getMonth() + 1;
   if (month < 10) {
     month = `0${month}`;
@@ -29,39 +32,12 @@ let ahkScript = "";
 let currentSuc = 0;
 
 // arreglo donde van las teclas que vamos a usar en el script
-const keysArray = [
-  "a",
-  "b",
-  "c",
-  "d",
-  "e",
-  "f",
-  "g",
-  "h",
-  "i",
-  "j",
-  "k",
-  "l",
-  "m",
-  "n",
-  "o",
-  "p",
-  "q",
-  "r",
-  "s",
-  "t",
-  "u",
-  "v",
-  "w",
-  "x",
-  "y",
-  "z",
-];
+const keysArray = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
 let keysCounter = 0;
 let sucCounter = [];
 
 //recorremos el objeto y vamos armando el script
-excelData.forEach((row, i) => {
+excelData.forEach((row) => {
   const desc = row.desc * 100;
   const cod =  row.cod;
   let strCod = cod.toString();
