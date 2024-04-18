@@ -1,12 +1,15 @@
 import xlsx from "xlsx";
 import fs from "fs";
 
+//se busca el archivo y la hoja del excel que trabajamos
 const workbook = xlsx.readFile("test.xlsx");
 const sheetName = workbook.SheetNames[0];
 const worksheet = workbook.Sheets[sheetName];
 
+//Asigna la información del excel a un objeto
 const excelData = xlsx.utils.sheet_to_json(worksheet, { raw: true });
 
+//Función para obtener la fecha actual y mostrarla en el formato correcto
 const getFechaDesde = () => {
   const date = new Date();
   const day = date.getDate() + 1;
@@ -20,8 +23,12 @@ const getFechaDesde = () => {
 };
 
 const fechaDesde = getFechaDesde();
+
+// variable donde guarda el texto
 let ahkScript = "";
 let currentSuc = 0;
+
+// arreglo donde van las teclas que vamos a usar en el script
 const keysArray = [
   "a",
   "b",
@@ -53,8 +60,12 @@ const keysArray = [
 let keysCounter = 0;
 let sucCounter = [];
 
+//recorremos el objeto y vamos armando el script
 excelData.forEach((row, i) => {
   const desc = row.desc * 100;
+  const cod =  row.cod;
+  let strCod = cod.toString();
+  let paddedCod = strCod.padStart(7, "0");
   if (currentSuc === 0) {
     ahkScript += `^${keysArray[keysCounter]}::{\n`;
     currentSuc = row.Suc;
@@ -63,32 +74,18 @@ excelData.forEach((row, i) => {
     keysCounter++;
     currentSuc = row.Suc;
     sucCounter.push({"suc":row.Suc,"keys": `ctrl + ${keysArray[keysCounter]}`});
-    ahkScript += `Return\n
-                  }\n
-                  ^${keysArray[keysCounter]}::{\n`;
+    ahkScript += `Return\n}\n^${keysArray[keysCounter]}::{\n`;
   }
   const fechaHasta = xlsx.SSF.format("ddmmyyyy", row.Hasta);
   //console.log(row.Suc, row.cod, desc, fechaHasta);
-  ahkScript += `SendText "${row.cod}"\n
-                Send "{Tab Down}"\n
-                Send "{Tab Up}"\n
-                SendText "${fechaDesde}"\n
-                Send "{Tab Down}"\n
-                Send "{Tab Up}"\n
-                SendText "${fechaHasta}"\n
-                Send "{Enter Down}"\n
-                Send "{Enter Up}"\n               
-                Sleep 500\n
-                SendText "${desc}"\n
-                Send "{Enter Down}"\n
-                Send "{Enter Up}"\n
-                Sleep 500\n           
-  `;
+  ahkScript += `SendText "${paddedCod}"\nSend "{Tab Down}"\nSend "{Tab Up}"\nSendText "${fechaDesde}"\nSend "{Tab Down}"\nSend "{Tab Up}"\nSend "{Tab Down}"\nSend "{Tab Up}"\nSendText "${fechaHasta}"\nSend "{Enter Down}"\nSend "{Enter Up}"\nSleep 500\nSendText "${desc}"\nSend "{Enter Down}"\nSend "{Enter Up}"\nSleep 500\n`;
 });
 
-ahkScript += `Return\n
-}`;
+//final del scropt
+ahkScript += `Return\n}`;
+//se escribe el string en el archivo del script
 fs.writeFileSync("datos.ahk", ahkScript);
+//se escribe el string en un json (para verificar que se haya generado correctamente)
 fs.writeFileSync("datos.json", JSON.stringify(excelData));
 console.log("Archivo generado en: datos.ahk");
 console.table(sucCounter);
