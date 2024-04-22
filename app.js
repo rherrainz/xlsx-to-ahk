@@ -64,8 +64,13 @@ ahkScript += `Return\n}`;
 fs.writeFileSync("datos.ahk", ahkScript);
 //se escribe el string en un json (para verificar que se haya generado correctamente)
 fs.writeFileSync("datos.json", JSON.stringify(excelData));
+
+//avisamos que se generó bien el archivo
 console.log("Archivo generado en: datos.ahk");
+//mostramos una tabla con los comandos del ahk
 console.table(sucCounter);
+
+//ejecutamos el script
 cp.exec("datos.ahk", (err, stdout, stderr) => {
   if (err) {
     console.error(err);
