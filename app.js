@@ -1,5 +1,6 @@
 import xlsx from "xlsx";
 import fs from "fs";
+import cp from "child_process";
 
 //se busca el archivo y la hoja del excel que trabajamos
 const workbook = xlsx.readFile("test.xlsx");
@@ -65,3 +66,10 @@ fs.writeFileSync("datos.ahk", ahkScript);
 fs.writeFileSync("datos.json", JSON.stringify(excelData));
 console.log("Archivo generado en: datos.ahk");
 console.table(sucCounter);
+cp.exec("datos.ahk", (err, stdout, stderr) => {
+  if (err) {
+    console.error(err);
+    return;
+  }
+  console.log(stdout);
+});
