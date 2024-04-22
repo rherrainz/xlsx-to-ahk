@@ -71,5 +71,6 @@ cp.exec("datos.ahk", (err, stdout, stderr) => {
     console.error(err);
     return;
   }
-  console.log(stdout);
+  stdout ? console.log(`stdout: ${stdout}`) : console.log("Archivo ejecutado correctamente");
+  stderr ? console.error(`stderr: ${stderr}`) : null;
 });
