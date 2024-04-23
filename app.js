@@ -10,7 +10,7 @@ const worksheet = workbook.Sheets[sheetName];
 //Asigna la información del excel a un objeto
 const excelData = xlsx.utils.sheet_to_json(worksheet, { raw: true });
 
-//Función para obtener la fecha actual y mostrarla en el formato correcto
+//Función para obtener la fecha cuando comienza la acción (mañana) y mostrarla en el formato correcto
 const getFechaDesde = () => {
   const date = new Date();
   let day = date.getDate() + 1;
@@ -39,10 +39,13 @@ let sucCounter = [];
 
 //recorremos el objeto y vamos armando el script
 excelData.forEach((row) => {
+  //se pasa el descuento de decimal a porcentaje y se escribe como string
   const desc = row.desc * 100;
   const cod =  row.cod;
   let strCod = cod.toString();
+  //se pasa el código a 7 cifras y se rellena con ceros a la izquierda
   let paddedCod = strCod.padStart(7, "0");
+  //detecta si es la primera sucursal o si hay cambios
   if (currentSuc === 0) {
     ahkScript += `^${keysArray[keysCounter]}::{\n`;
     currentSuc = row.Suc;
@@ -53,12 +56,13 @@ excelData.forEach((row) => {
     sucCounter.push({"suc":row.Suc,"keys": `ctrl + ${keysArray[keysCounter]}`});
     ahkScript += `Return\n}\n^${keysArray[keysCounter]}::{\n`;
   }
-  const fechaHasta = xlsx.SSF.format("ddmmyyyy", row.Hasta);
-  //console.log(row.Suc, row.cod, desc, fechaHasta);
+  //calcula la fecha hasta pasando el formato de excel a ddmmyyyy
+  const fechaHasta = xlsx.SSF.format("ddmmyyyy", row.Hasta);   
+  //escribimos el script
   ahkScript += `SendText "${paddedCod}"\nSend "{Tab Down}"\nSend "{Tab Up}"\nSendText "${fechaDesde}"\nSend "{Tab Down}"\nSend "{Tab Up}"\nSend "{Tab Down}"\nSend "{Tab Up}"\nSendText "${fechaHasta}"\nSend "{Enter Down}"\nSend "{Enter Up}"\nSleep 500\nSendText "${desc}"\nSend "{Enter Down}"\nSend "{Enter Up}"\nSleep 500\n`;
 });
 
-//final del scropt
+//final del script
 ahkScript += `Return\n}\n^q::ExitApp`;
 
 //se escribe el string en el archivo del script
