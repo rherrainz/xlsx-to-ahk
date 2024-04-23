@@ -76,6 +76,7 @@ console.log("Archivo generado en: datos.ahk");
 console.table(sucCounter);
 console.log("Para ejecutar el script presiona Ctrl + 1, Ctrl + 2, Ctrl + 3, etc.");
 console.log('Para cerrar el script presiona Ctrl + q');
+
 //ejecutamos el script
 cp.exec("datos.ahk", (err, stdout, stderr) => {
   if (err) {
