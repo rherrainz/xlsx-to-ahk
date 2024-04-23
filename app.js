@@ -33,7 +33,7 @@ let ahkScript = "";
 let currentSuc = 0;
 
 // arreglo donde van las teclas que vamos a usar en el script
-const keysArray = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
+const keysArray = ["1","2","3","4","5","6","7","8","9","0","a","b","d","e","f","g","h","i","j","k","l","m","n","o","r","s","t","u","w","y","z"];
 let keysCounter = 0;
 let sucCounter = [];
 
@@ -59,7 +59,8 @@ excelData.forEach((row) => {
 });
 
 //final del scropt
-ahkScript += `Return\n}`;
+ahkScript += `Return\n}\n^q::ExitApp`;
+
 //se escribe el string en el archivo del script
 fs.writeFileSync("datos.ahk", ahkScript);
 //se escribe el string en un json (para verificar que se haya generado correctamente)
@@ -69,7 +70,8 @@ fs.writeFileSync("datos.json", JSON.stringify(excelData));
 console.log("Archivo generado en: datos.ahk");
 //mostramos una tabla con los comandos del ahk
 console.table(sucCounter);
-
+console.log("Para ejecutar el script presiona Ctrl + 1, Ctrl + 2, Ctrl + 3, etc.");
+console.log('Para cerrar el script presiona Ctrl + q');
 //ejecutamos el script
 cp.exec("datos.ahk", (err, stdout, stderr) => {
   if (err) {
