@@ -36,7 +36,7 @@ let ahkScript = "";
 let currentSuc = 0;
 
 // arreglo donde van las teclas que vamos a usar en el script
-const keysArray = ["1","2","3","4","5","6","7","8","9","0","a","b","d","e","f","g","h","i","j","k","l","m","n","o","r","s","t","u","w","y","z"];
+const keysArray = ["1","2","3","4","5","6","7","8","9","0","a","b","d","e","f","g","h","i","j","k","l","m","n","o","r","s","t","u","w","y"];
 let keysCounter = 0;
 let sucCounter = [];
 
