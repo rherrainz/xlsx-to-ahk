@@ -13,28 +13,11 @@ const excelData = xlsx.utils.sheet_to_json(worksheet, { raw: true });
 //Función para obtener la fecha cuando comienza la acción (mañana) y mostrarla en el formato correcto
 const getFechaDesde = () => {
   const date = new Date();
-  console.log(date);
-  let day = date.getDate() + 1;
-
-  let month = date.getMonth() + 1;
-  let year = date.getFullYear();
-  
-  if (day > 31) {
-    day = 1;
-    month = month + 1;
-  }
-  if ((day>30)&&(month==4||month==6||month==9||month==11)){
-    day = 1;
-    month = month + 1;    
-  }
-  if ((day>28)&&(month==2)){
-    day = 1;
-    month = month + 1;    
-  }
-  if (month > 12) {
-    month = 1;
-    year++;
-  }
+  let tomorrow = new Date(date.getTime());
+  tomorrow.setDate(date.getDate() + 1);
+  let day = tomorrow.getDate();
+  let month = tomorrow.getMonth() +1;
+  let year = tomorrow.getFullYear();
   if (day < 10) {
       day = `0${day}`;
     }
@@ -46,6 +29,7 @@ const getFechaDesde = () => {
 };
 
 const fechaDesde = getFechaDesde();
+
 
 // variable donde guarda el texto
 let ahkScript = "";
