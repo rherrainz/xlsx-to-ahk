@@ -39,7 +39,7 @@ let currentSuc = 0;
 const keysArray = ["1","2","3","4","5","6","7","8","9","0","a","b","d","e","f","g","h","i","j","k","l","m","n","o","r","s","t","u","w","y"];
 let keysCounter = 0;
 let sucCounter = [];
-
+let artCount = 1;
 //recorremos el objeto y vamos armando el script
 excelData.forEach((row) => {
   //se pasa el descuento de decimal a porcentaje y se escribe como string
@@ -52,17 +52,24 @@ excelData.forEach((row) => {
   if (currentSuc === 0) {
     ahkScript += `^${keysArray[keysCounter]}::{\n`;
     currentSuc = row.Suc;
-    sucCounter.push({"suc":row.Suc,"keys": `ctrl + ${keysArray[keysCounter]}`});
+    
   } else if (currentSuc !== row.Suc) {
     keysCounter++;
     currentSuc = row.Suc;
-    sucCounter.push({"suc":row.Suc,"keys": `ctrl + ${keysArray[keysCounter]}`});
     ahkScript += `Return\n}\n^${keysArray[keysCounter]}::{\n`;
   }
   //calcula la fecha hasta pasando el formato de excel a ddmmyyyy
   const fechaHasta = xlsx.SSF.format("ddmmyyyy", row.Hasta);   
   //escribimos el script
   ahkScript += `SendText "${paddedCod}"\nSend "{Tab Down}"\nSend "{Tab Up}"\nSendText "${fechaDesde}"\nSend "{Tab Down}"\nSend "{Tab Up}"\nSend "{Tab Down}"\nSend "{Tab Up}"\nSendText "${fechaHasta}"\nSend "{Enter Down}"\nSend "{Enter Up}"\nSleep 500\nSendText "${desc}"\nSend "{Enter Down}"\nSend "{Enter Up}"\nSleep 500\n`;
+  
+  if (sucCounter[keysCounter] === undefined) {
+    artCount = 1
+    sucCounter[keysCounter] = {"suc":row.Suc,"art qty":artCount,"keys": `ctrl + ${keysArray[keysCounter]}`};
+  }else{
+    artCount++;
+    sucCounter[keysCounter] = {"suc":row.Suc,"art qty":artCount,"keys": `ctrl + ${keysArray[keysCounter]}`};
+  } 
 });
 
 //final del script
@@ -73,9 +80,14 @@ fs.writeFileSync("datos.ahk", ahkScript);
 //se escribe el string en un json (para verificar que se haya generado correctamente)
 fs.writeFileSync("datos.json", JSON.stringify(excelData));
 
+
+//console.log(artCounter);
+
 //avisamos que se generó bien el archivo
 console.log("Archivo generado en: datos.ahk");
 //mostramos una tabla con los comandos del ahk
+//console.table(sucCounter);
+//let combinedObj = {...artCounter, ...sucCounter};
 console.table(sucCounter);
 console.log("Para ejecutar el script presiona Ctrl + 1, Ctrl + 2, Ctrl + 3, etc.");
 console.log('Para cerrar el script presiona Ctrl + q');
