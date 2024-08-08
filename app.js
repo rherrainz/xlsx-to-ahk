@@ -63,6 +63,7 @@ excelData.forEach((row) => {
   //escribimos el script
   ahkScript += `SendText "${paddedCod}"\nSend "{Tab Down}"\nSend "{Tab Up}"\nSendText "${fechaDesde}"\nSend "{Tab Down}"\nSend "{Tab Up}"\nSend "{Tab Down}"\nSend "{Tab Up}"\nSendText "${fechaHasta}"\nSend "{Enter Down}"\nSend "{Enter Up}"\nSleep 500\nSendText "${desc}"\nSend "{Enter Down}"\nSend "{Enter Up}"\nSleep 500\n`;
   
+  //cargamos los datos en la tabla que se muestra al final
   if (sucCounter[keysCounter] === undefined) {
     artCount = 1
     sucCounter[keysCounter] = {"suc":row.Suc,"art qty":artCount,"keys": `ctrl + ${keysArray[keysCounter]}`};
