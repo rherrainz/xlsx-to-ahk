@@ -44,8 +44,8 @@ let artCount = 1;
 excelData.forEach((row) => {
   //se pasa el descuento de decimal a porcentaje y se escribe como string
   const desc = row.desc * 100;
-  const cod =  row.cod;
-  let strCod = cod.toString();
+  const cod =  row.cod+"";
+  let strCod = cod.toString(); 
   //se pasa el código a 7 cifras y se rellena con ceros a la izquierda
   let paddedCod = strCod.padStart(7, "0");
   //detecta si es la primera sucursal o si hay cambios
